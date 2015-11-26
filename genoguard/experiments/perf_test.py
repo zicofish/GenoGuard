@@ -4,7 +4,7 @@ Created on Nov 13, 2014
 
 @author: zhihuang
 '''
-from GenoGuard import *
+from honey_encryption.GenoGuard import *
 
 def cluster_encode(kwargs):
     SNPRefList = []

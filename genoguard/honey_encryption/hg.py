@@ -2,6 +2,8 @@
 Created on Jun 17, 2014
 
 @author: zhihuang
+
+@deprecated: This file is an initial product of the solution. It has been replaced by GenoGuard.py.
 '''
 import math
 import random
@@ -196,7 +198,7 @@ def pairwiseJoint(varSNP, condSNP, AF, D):
     return jointMat
 
 '''
-Pack a big integer into binary data.
+Pack a big integer into binary dat.
 This is only used for AES block cipher. You don't need this.
 '''
 def int_to_packed(val, bitLen):
@@ -213,7 +215,7 @@ def int_to_packed(val, bitLen):
     return struct.pack('>%d%s' % (num_words, 'I'), *words)
 
 '''
-Unpack binary data to a big integer.
+Unpack binary dat to a big integer.
 This is only used for AES block cipher. You don't need this.
 '''
 def packed_to_int(packed, bitLen):
@@ -299,11 +301,11 @@ if __name__ == "__main__":
     !IMPORTANT
     Remember to replace the file names with those in your own laptop.
     '''
-    AF, LD = loadPriorKnowledge("C:/Users/zhihuang/Desktop/data/hapmap/hg_allele_freqs_chr22_CEU.txt",
-                                "C:/Users/zhihuang/Desktop/data/hapmap/hg_ld_chr22_CEU.txt")
+    AF, LD = loadPriorKnowledge("C:/Users/zhihuang/Desktop/dat/hapmap/hg_allele_freqs_chr22_CEU.txt",
+                                "C:/Users/zhihuang/Desktop/dat/hapmap/hg_ld_chr22_CEU.txt")
     SNPRefList = []
     dataset = []
-    datFile = open("C:/Users/zhihuang/Desktop/data/hapmap/new_genotypes_chr22_CEU.txt")
+    datFile = open("C:/Users/zhihuang/Desktop/dat/hapmap/new_genotypes_chr22_CEU.txt")
     for line in datFile.readlines():
         attrArray = line.split()
         SNPRefList.append(attrArray[0])

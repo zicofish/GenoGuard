@@ -24,7 +24,7 @@ def pca(dataMat, topNfeat = 9999999):
     return redEigVects, lowDDataMat, reconMat
     
 def replaceNanWithMean():
-    datMat = loadDataSet('secom.data', ' ')
+    datMat = loadDataSet('secom.dat', ' ')
     numFeat = shape(datMat)[1]
     for i in range(numFeat):
         meanVal = mean(datMat[nonzero(~isnan(datMat[:, i].A))[0], i])

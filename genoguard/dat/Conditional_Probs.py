@@ -140,26 +140,30 @@ def condProb_2_order(SNVs, condProb_1):
 def buildAllChroms():
     for i in range(1, 23):
         # generating outputs
-        snvs_in = loadTraningDataset("./hapmap/chr%s/big_genotypes_chr%s_CEU.txt" % (i, i))
+        buildChrom(i)
         
-        condProb0 = condProb_0_order(snvs_in)
-        condProb1 = condProb_1_order(snvs_in, condProb0)
-        condProb2 = condProb_2_order(snvs_in, condProb1)
-        print ".................."
-        condProb0File = open('./hapmap/chr%s/big_condProb0_chr%s_CEU_ref.txt' % (i, i), 'w')
-        condProb0File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb0)))
-        condProb0File.close()
-        # print "\n".join(map(str, condProb0))
-        print ".................."
-        condProb1File = open('./hapmap/chr%s/big_condProb1_chr%s_CEU_ref.txt' % (i, i), 'w')
-        condProb1File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb1)))
-        condProb1File.close()
-        # print "\n".join(map(str, condProb1))
-        print ".................."
-        condProb2File = open('./hapmap/chr%s/big_condProb2_chr%s_CEU_ref.txt' % (i, i), 'w')
-        condProb2File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb2)))
-        condProb2File.close()
-        # print "\n".join(map(str, condProb2))
+def buildChrom(ChromNum):
+    snvs_in = loadTraningDataset("../hapmap/chr%s/small_genotypes_chr%s_CEU.txt" % (ChromNum, ChromNum))
+        
+    condProb0 = condProb_0_order(snvs_in)
+    condProb1 = condProb_1_order(snvs_in, condProb0)
+    condProb2 = condProb_2_order(snvs_in, condProb1)
+    print ".................."
+    condProb0File = open('../hapmap/chr%s/small_condProb0_chr%s_CEU_ref.txt' % (ChromNum, ChromNum), 'w')
+    condProb0File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb0)))
+    condProb0File.close()
+    # print "\n".join(map(str, condProb0))
+    print ".................."
+    condProb1File = open('../hapmap/chr%s/small_condProb1_chr%s_CEU_ref.txt' % (ChromNum, ChromNum), 'w')
+    condProb1File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb1)))
+    condProb1File.close()
+    # print "\n".join(map(str, condProb1))
+    print ".................."
+    condProb2File = open('../hapmap/chr%s/small_condProb2_chr%s_CEU_ref.txt' % (ChromNum, ChromNum), 'w')
+    condProb2File.write("\n".join(map(lambda u: '\t'.join(map(str, u)), condProb2)))
+    condProb2File.close()
+    # print "\n".join(map(str, condProb2))
         
 if __name__ == '__main__':
-    buildAllChroms()
+    #buildAllChroms()
+    buildChrom(22)

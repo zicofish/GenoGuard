@@ -279,9 +279,9 @@ def processRecombData(AFFileName, recombFileName, legendFileName, haplotypeFileN
             raise ValueError("snp %s not found in legend" % (snp))
     print "Validation succeed..."
     
-    # Filter and transform haplotype data. For each snp, if the two alleles in the legend file has different order from those 
+    # Filter and transform haplotype dat. For each snp, if the two alleles in the legend file has different order from those 
     # in the allele frequency file, we should switch them in the legend file and changes 0 to 1 and 1 to 0 in the haplotype file
-    print "Start filtering and transforming haplotype data.................."
+    print "Start filtering and transforming haplotype dat.................."
     newHaplotype = []
     legendIdx = 0
     for i in range(len(SNPRefList)):
@@ -323,7 +323,7 @@ def processRecombData(AFFileName, recombFileName, legendFileName, haplotypeFileN
         i += 1
     print "Recombination rates processing finished..............."
     
-    print "Writing out data.............."
+    print "Writing out dat.............."
     newRecombFile = open(newRecombFileName, 'w')
     newRecombFile.write('\n'.join(map(lambda u: '\t'.join(map(str, u)), newRecomb)))
     newRecombFile.close()
@@ -428,14 +428,17 @@ def transposeData(inFileName, outFileName):
     outFile.write("\n".join(map(lambda u: " ".join(map(str, u)), datMat)))
     outFile.close()
     
+'''
+Randomly hide the specified percentage of SNVs in the input genotype file
+'''
 def hideSNVs(kwargs):
     import random
     genotypeFile = open(kwargs['genotypeFileName'])
     genotype = map(lambda u: u.split()[kwargs['startIdx']:kwargs['endIdx']], genotypeFile.readlines())
     hiddenGenotype = []
-    for i in range(len(genotype)):
+    for i in range(len(genotype)): # length of genotype
         tmp = []
-        for j in range(len(genotype[0])):
+        for j in range(len(genotype[0])): # number of patients
             r = random.random()
             if r < float(kwargs['percent']):
                 tmp.append('H')
@@ -503,21 +506,23 @@ def alignHaploToGeno(kwargs):
     outFile.close()
     
 if __name__ == '__main__':
+    for i in range(1, 21):
+        print "Hiding ", i*0.05*100, "% of SNVs and producing the result file \"hiddenSNVs_s0_e165_chr22 ", i*0.05, ".txt\""
+        hideSNVs({'genotypeFileName':'../hapmap/chr22/small_genotypes_chr22_CEU.txt',
+                  'startIdx':0,
+                  'endIdx':165,
+                  'percent':i*0.05,
+                  'outFileName':'../hapmap/chr22/hiddenSNVs/hiddenSNVs_s0_e165_chr22_'+str(i*0.05)+'.txt'})
 #     alignHaploToGeno({'orgGneotypeFileName':'./hapmap/chr22/genotypes_chr22_CEU_phase3.2_consensus.b36_fwd.txt',
 #                       'afFileName':'./hapmap/chr22/big_allele_freqs_chr22_CEU.txt',
 #                       'haploFileNames':['./hapmap/chr22/hapmap3_r2_b36_fwd.consensus.qc.poly.chr22_ceu.D.phased', 
 #                                         './hapmap/chr22/hapmap3_r2_b36_fwd.consensus.qc.poly.chr22_ceu.phased',
 #                                         './hapmap/chr22/hapmap3_r2_b36_fwd.consensus.qc.poly.chr22_ceu.unr.phased'],
 #                       'outFileName':'./hapmap/chr22/big_aligned_CEU.chr22.hap'})
-    for i in range(1, 21):
-        transposeData("./merge-output/hapmap/chr22/infer_test/predict_recomb_chr22_CEU_%s.txt" % (i*0.05), 
-                      "./merge-output/hapmap/chr22/infer_test/PredictedSNVs_chr22_CEU_%s.txt" % (i*0.05))
 #     for i in range(1, 21):
-#         hideSNVs({'genotypeFileName':'./hapmap/chr22/big_genotypes_chr22_CEU.txt',
-#                   'startIdx':100,
-#                   'endIdx':165,
-#                   'percent':i*0.05,
-#                   'outFileName':'./hapmap/chr22/hiddenSNVs/hiddenSNVs_s100_e165_chr22_'+str(i*0.05)+'.txt'})
+#         transposeData("./merge-output/hapmap/chr22/infer_test/predict_recomb_chr22_CEU_%s.txt" % (i*0.05), 
+#                       "./merge-output/hapmap/chr22/infer_test/PredictedSNVs_chr22_CEU_%s.txt" % (i*0.05))
+
 #     transposeData("./hapmap/chr22/big_recomb_random_chr22_CEU.txt", 
 #                   "./hapmap/chr22/synthetic_recomb_chr22_CEU.txt")
 
@@ -551,27 +556,27 @@ if __name__ == '__main__':
 #         "./hapmap/hg_ld_chr22_CEU.txt",
 #         "./hapmap/new_genotypes_chr22_CEU.txt")
 
-# genChrom22Map("C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map",
+# genChrom22Map("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map",
 #               "chrom22.map")
 
-# genChrom22Ped("C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.ped",
+# genChrom22Ped("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.ped",
 #                  "chrom22.ped",
-#                  "C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map")
+#                  "C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map")
     
-# mapFileConverter("C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map", 
-#                  "C:/Users/zhihuang/Desktop/data/hapmap/phase3/top100SNPs.map")
-# pedFileConverter("C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.ped",
-#                  "C:/Users/zhihuang/Desktop/data/hapmap/phase3/top100SNPs.ped",
-#                  "C:/Users/zhihuang/Desktop/data/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map")
+# mapFileConverter("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map", 
+#                  "C:/Users/zhihuang/Desktop/dat/hapmap/phase3/top100SNPs.map")
+# pedFileConverter("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.ped",
+#                  "C:/Users/zhihuang/Desktop/dat/hapmap/phase3/top100SNPs.ped",
+#                  "C:/Users/zhihuang/Desktop/dat/hapmap/phase3/hapmap3_r2_b36_fwd.consensus.qc.poly.map")
 # print getMajorAlleles("SNPRefList.txt")
 # convertToPCATrainingSet("top100SNPs.ped",
 #                        "top100SNPs.map",
 #                        "relationships_w_pops_121708.txt",
 #                        "SNPRefList.txt",
 #                        "trainingSet.txt")
-# SNPList("C:/Users/zhihuang/Desktop/data/hapmap/phase3/top100SNPs.map",
-#         "C:/Users/zhihuang/Desktop/data/hapmap/phase3/query_snps.txt")
-# alleleFreqCompile("C:/Users/zhihuang/Desktop/data/hapmap/phase3/freq/",
+# SNPList("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/top100SNPs.map",
+#         "C:/Users/zhihuang/Desktop/dat/hapmap/phase3/query_snps.txt")
+# alleleFreqCompile("C:/Users/zhihuang/Desktop/dat/hapmap/phase3/freq/",
 #                   "top100SNPs.map",
 #                   'CEU')
 # genSNPRefList(['CEU_freq.txt', 'ASW_freq.txt', 'CHB_freq.txt'],

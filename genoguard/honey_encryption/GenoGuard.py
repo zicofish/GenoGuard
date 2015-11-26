@@ -103,7 +103,7 @@ class BaseGenoGuard(object):
         return 0
     
     '''
-    Pack a big integer into binary data.
+    Pack a big integer into binary dat.
     '''
     def int_to_packed(self, val, bitLen):
         assert bitLen % 32 == 0
@@ -119,7 +119,7 @@ class BaseGenoGuard(object):
         return struct.pack('>%d%s' % (num_words, 'I'), *words)
     
     '''
-    Unpack binary data to a big integer.
+    Unpack binary dat to a big integer.
     '''
     def packed_to_int(self, packed, bitLen):
         assert bitLen % 32 == 0
@@ -289,7 +289,7 @@ class NaiveGenoGuard(BaseGenoGuard):
         return [0]*(len(self.SNPRefList) - len(subSeq)) + subSeq
 
 '''
-The DTE model that uses public linkage disequilibrium and allele frequency data for building a first-order Markov chain
+The DTE model that uses public linkage disequilibrium and allele frequency dat for building a first-order Markov chain
 '''
 class PubLDGenoGuard(BaseGenoGuard):
     def __init__(self, SNPRefList, bitLen, AF, LD):
@@ -496,14 +496,14 @@ if __name__ == "__main__":
     !IMPORTANT
     Remember to replace the file names with those in your own laptop.
     '''
-#     AF, LD = loadPriorKnowledge("./hapmap/small_allele_freqs_chr22_CEU.txt",
-#                                 "./hapmap/small_ld_chr22_CEU.txt")
-#     directCondProbs = loadDirectCondProbs("./hapmap/small_condProb2_chr22_CEU_ref.txt")  # 2nd-order Markov chain
-    haplotype, geneticDist = loadRecombData('./hapmap/chr22/small_CEU.chr22.hap',
-                                            './hapmap/chr22/small_genetic_map_chr22_combined_b36.txt')
+#     AF, LD = loadPriorKnowledge("../hapmap/small_allele_freqs_chr22_CEU.txt",
+#                                 "../hapmap/small_ld_chr22_CEU.txt")
+#     directCondProbs = loadDirectCondProbs("../hapmap/small_condProb2_chr22_CEU_ref.txt")  # 2nd-order Markov chain
+    haplotype, geneticDist = loadRecombData('../hapmap/chr22/small_CEU.chr22.hap',
+                                            '../hapmap/chr22/small_genetic_map_chr22_combined_b36.txt')
     SNPRefList = []
     dataset = []
-    datFile = open("./hapmap/chr22/small_genotypes_chr22_CEU.txt")
+    datFile = open("../hapmap/chr22/small_genotypes_chr22_CEU.txt")
     for line in datFile.readlines():
         attrArray = line.split()
         SNPRefList.append(attrArray[0])

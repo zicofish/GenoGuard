@@ -5,8 +5,10 @@ Created on Dec 11, 2014
 @author: zhihuang
 '''
 from genRandomSeq import *
-import numpy as np
 
+'''
+Predict the hidden SNVs with the recombination model
+'''
 def predictHiddenSNVsRecombModel(Input_SNVs, recombModel):
     predictedSNVs = np.array([([0]*len(Input_SNVs[0])) for i in range(len(Input_SNVs))])
     for j in range(0, len(Input_SNVs[0])):
@@ -42,27 +44,30 @@ def loadAndPredict(kwargs):
     
     inputSNVsFile = open(kwargs['hiddenSNVsFileName'])
     patientIdx = int(kwargs['patientIdx'])
-    inputSNVs = map(lambda u: u.split()[patientIdx:(patientIdx+1)], inputSNVsFile.readlines())
+    # Here we only predict for one person. But inputSNVs is two-dimension, so you can always predict for multiple persons together.
+    inputSNVs = map(lambda u: u.split()[(patientIdx+1):(patientIdx+2)], inputSNVsFile.readlines()) 
     
+    print "Predicting hidden SNVs for patient ", patientIdx, "..."
     predictedSNVs = predictHiddenSNVsRecombModel(inputSNVs, model)
     
     predictedSNVsFile = open(kwargs['predictedSNVsFileName'], 'w')
     predictedSNVsFile.write("\n".join(map(lambda u: " ".join(map(str, u)), predictedSNVs.transpose())))
     predictedSNVsFile.close()
+    print "Complete. Result written to ", kwargs['predictedSNVsFileName']
     
 
 if __name__ == '__main__':
-    ####  cluster only   ########
-    import sys
-    arg = sys.argv
-    arg_dict = dict(map(lambda u: u.split('='), arg[2:]))
-    current_module = sys.modules[__name__]
-    getattr(current_module, arg[1])(arg_dict)
+    ####  For running on the cluster   ########
+#     import sys
+#     arg = sys.argv
+#     arg_dict = dict(map(lambda u: u.split('='), arg[2:]))
+#     current_module = sys.modules[__name__]
+#     getattr(current_module, arg[1])(arg_dict)
     ####  cluster end   #########
-#     loadAndPredict({'genotypeFileName':'./hapmap/chr22/big_genotypes_chr22_CEU.txt',
-#                     'haplotypeFileName':'./hapmap/chr22/big_CEU.chr22.hap',
-#                     'geneticDistFileName':'./hapmap/chr22/big_genetic_map_chr22_combined_b36.txt',
-#                     'hiddenSNVsFileName':'./hapmap/chr22/HiddenSNVs10%1.txt',
-#                     'patientIdx':0,
-#                     'predictedSNVsFileName':'./hapmap/chr22/predictedSNVs10%1.txt'})
-#     
+    
+    loadAndPredict({'genotypeFileName':'../hapmap/chr22/small_genotypes_chr22_CEU.txt',
+                    'haplotypeFileName':'../hapmap/chr22/small_CEU.chr22.hap',
+                    'geneticDistFileName':'../hapmap/chr22/small_genetic_map_chr22_combined_b36.txt',
+                    'hiddenSNVsFileName':'../hapmap/chr22/hiddenSNVs/hiddenSNVs_s0_e165_chr22_0.3.txt',
+                    'patientIdx':0,
+                    'predictedSNVsFileName':'../hapmap/chr22/hiddenSNVs/predictedSNVs_patient0_0.3.txt'})

@@ -3,8 +3,10 @@
 Created on Nov 7, 2014
 
 @author: zhihuang
+
+Chi-squared test of different data models. Refer to the paper for more details.
 '''
-from GenoGuard import *
+from honey_encryption.GenoGuard import *
 import numpy as np
 from scipy import stats
 import pickle

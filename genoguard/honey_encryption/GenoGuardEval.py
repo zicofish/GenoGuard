@@ -5,8 +5,6 @@ Created on Jul 16, 2014
 @author: zhihuang
 '''
 from GenoGuard import *
-import gmpy2
-from gmpy2 import mpz
 
 def plotResult(datasetProbFileName, randomProbFileName):
     datasetProbFile = open(datasetProbFileName)

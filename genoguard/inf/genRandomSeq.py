@@ -6,14 +6,6 @@ Created on Jun 17, 2014
 import math
 import random
 import numpy as np
-import gmpy2
-from gmpy2 import mpz
-import struct
-from Crypto.Hash import HMAC
-from Crypto.Cipher import AES
-from Crypto import Random
-import time
-
 
 class BaseModel(object):
     PREC = 10**-4
@@ -119,8 +111,6 @@ class RecombModel(BaseModel):
         # Bias correction coefficients
         self.a_ = -3.817e-01 + 6.350e-03 * len(SNPRefList) - 3.833e-05 * len(SNPRefList) * len(SNPRefList);
         self.b_ = -1.133e-01 - 2.600e-03 * len(SNPRefList) + 1.333e-05 * len(SNPRefList) * len(SNPRefList);
-        print "a_: ", self.a_
-        print "b_: ", self.b_
         
     def computeTheta(self, N):
         theta = 0
@@ -132,7 +122,6 @@ class RecombModel(BaseModel):
     
     def computeMutateMatrix(self, theta, N):
         r = theta * 0.5 / (theta + N)
-        print r
         return np.array([[(1-r)*(1-r), 2*r*(1-r), r*r],
                 [r*(1-r), r*r + (1-r)*(1-r), r*(1-r)],
                 [r*r, 2*r*(1-r), (1-r)*(1-r)]])
@@ -189,7 +178,7 @@ class RecombModel(BaseModel):
 #         return rate*pow (10.0, self.a_ + self.b_ * math.log10 (rho))
             
 '''
-Load allele frequencies and linkage disequilibrium
+Load allele frequencies (AF) and linkage disequilibrium (LD) for the PubLDModel
 
 AFFileName is the allele frequency file. It has one SNV in each row, with the format: position    major_allele_base    major_allele_frequency    minor_allele_base    minor_allele_frequency
 For example, "14795579    G    0.812    T    0.188"
@@ -203,7 +192,7 @@ For example, it could be extended to "15403514    21    -0.195466617566    20   
 
 Please also note that AFFileName and LDFileName should have the same number of rows, namely, the same number of SNVs.
 '''
-def loadPriorKnowledge(AFFileName, LDFileName):
+def loadAFAndLD(AFFileName, LDFileName):
     AFFile = open(AFFileName)
     AF = []
     for line in AFFile.readlines():
@@ -218,12 +207,18 @@ def loadPriorKnowledge(AFFileName, LDFileName):
     LDFile.close()
     return AF, LD
 
+'''
+Load k-th order markov chain for the DirectCondProbModel
+'''
 def loadDirectCondProbs(probFileName):
     probFile = open(probFileName)
     directCondProbs = [map(float, line.split()) for line in probFile.readlines()]
     probFile.close()
     return directCondProbs
 
+'''
+Load haplotype and genetic distance for the RecombModel
+'''
 def loadRecombData(haplotypeFileName, recombFileName):
     haplotypeFile = open(haplotypeFileName)
     haplotype = map(lambda u: map(int, u.split()[1:]), haplotypeFile.readlines())
@@ -235,6 +230,9 @@ def loadRecombData(haplotypeFileName, recombFileName):
     
     return haplotype, geneticDist
 
+'''
+Generate random samples under the specified model
+'''
 def genRandSeq(kwargs):
     SNPRefList = []
     dataset = []
@@ -246,7 +244,7 @@ def genRandSeq(kwargs):
     dataset = np.array(dataset, dtype=int)
     
     if kwargs['modelName'] == 'PubLDModel':
-        AF, LD = loadPriorKnowledge(kwargs['AFFileName'], kwargs['LDFileName'])
+        AF, LD = loadAFAndLD(kwargs['AFFileName'], kwargs['LDFileName'])
         model = PubLDModel(SNPRefList, AF, LD)
     elif kwargs['modelName'] == 'DirectCondProbModel':
         directCondProbs = loadDirectCondProbs(kwargs['probFileName'])
@@ -257,6 +255,7 @@ def genRandSeq(kwargs):
         model = RecombModel(SNPRefList, map(lambda u: u[:200], haplotype), geneticDist)
     outFile = open(kwargs['outFileName'], 'a')
     for i in range(int(kwargs['sampleSize'])):
+        print "Generating sample sequence ", i, "..."
         seq = model.gen()
         outFile.write(' '.join(map(str, seq)) + '\n')
     outFile.close()
@@ -266,15 +265,15 @@ if __name__ == "__main__":
     !IMPORTANT
     Remember to replace the file names with those in your own laptop.
     '''
-#     genRandSeq({'genotypeFileName':"./hapmap/chr22/big_genotypes_chr22_CEU.txt",
+#     genRandSeq({'genotypeFileName':"../hapmap/chr22/small_genotypes_chr22_CEU.txt",
 #                 'modelName':'DirectCondProbModel',
-#                 'probFileName':'./hapmap/chr22/big_condProb0_chr22_CEU_ref.txt',
+#                 'probFileName':'../hapmap/chr22/small_condProb0_chr22_CEU_ref.txt',
 #                 'order':0,
-#                 'outFileName':'./hapmap/chr22/big_directcond_random_chr22_CEU.txt',
+#                 'outFileName':'../hapmap/chr22/small_directcond_random_chr22_CEU.txt',
 #                 'sampleSize':100})
-    genRandSeq({'genotypeFileName':"./hapmap/chr22/big_genotypes_chr22_CEU.txt",
+    genRandSeq({'genotypeFileName':"../hapmap/chr22/small_genotypes_chr22_CEU.txt",
                 'modelName':'RecombModel',
-                'haplotypeFileName':'./hapmap/chr22/big_CEU.chr22.hap',
-                'geneticDistFileName':'./hapmap/chr22/big_genetic_map_chr22_combined_b36.txt',
-                'outFileName':'./hapmap/chr22/big_recomb_random_chr22_CEU.txt',
+                'haplotypeFileName':'../hapmap/chr22/small_CEU.chr22.hap',
+                'geneticDistFileName':'../hapmap/chr22/small_genetic_map_chr22_combined_b36.txt',
+                'outFileName':'../hapmap/chr22/small_recomb_random_chr22_CEU.txt',
                 'sampleSize':10})
