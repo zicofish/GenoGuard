@@ -6,14 +6,15 @@ Created on Dec 11, 2014
 '''
 from genRandomSeq import *
 
+
 '''
-Predict the hidden SNVs with the recombination model
+Predict the hidden SNVs with the specified model
 '''
-def predictHiddenSNVsRecombModel(Input_SNVs, recombModel):
+def predictHiddenSNVsRecombModel(Input_SNVs, model):
     predictedSNVs = np.array([([0]*len(Input_SNVs[0])) for i in range(len(Input_SNVs))])
     for j in range(0, len(Input_SNVs[0])):
         for i in range(0, len(Input_SNVs)):
-            probs = recombModel.condProb(predictedSNVs[:(i+1), j])
+            probs = model.condProb(predictedSNVs[:(i+1), j])
             if Input_SNVs[i][j] != 'H':
                 predictedSNVs[i, j] = int(Input_SNVs[i][j])
             else:
@@ -29,6 +30,12 @@ def predictHiddenSNVsRecombModel(Input_SNVs, recombModel):
                 
     return predictedSNVs
 
+'''
+Load the specified model and use it to predict hidden SNVs
+NOTE: In this function, I have only implemented loading the RecombModel. 
+TODO: For the other two models, PubLDModel and DirectCondProbModel, the extension is very simple. Please refer to 
+the function 'genRandSeq' in the file 'genRandomSeq.py' to understand how to load the other two models.
+'''
 def loadAndPredict(kwargs):
     SNPRefList = []
     dataset = []

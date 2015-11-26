@@ -10,8 +10,22 @@ The data is produced from the [Hapmap dataset](http://hapmap.ncbi.nlm.nih.gov/do
 More explanation about the format can be found in the code.
 
 # GenoGuard
-To test GenoGuard on encrypting and decrypting a genome sequence, simply run the python code `honey_encryption.GenoGuard.py`, which is the implementation of honey encryption with the proposed DTE models on genomic data:
+To test GenoGuard on encrypting and decrypting a genome sequence, simply run the python code `honey_encryption/GenoGuard.py`, which is the implementation of honey encryption with the proposed DTE models on genomic data:
+
 `python GenoGuard.py`
 
-# Inference
-All other codes are just auxiliary for conducting the experiments and producing figures in the paper. It is hard and tiring to comment them. Yup, they are not important. But if you are indeed so ambitious to conduct those experiments by yourself, please contact me (zhicong.huang@epfl.ch). Let's discuss. 
+# Inference of hidden SNVs
+The pipeline for our experiment of inference attack is described as follows. 
+
+To produce data with hidden SNVs, run the function `hideSNVs` in the code `dat/dataConverter.py` :
+
+`python dataConverter.py`
+
+To predict the hidden SNVs with the recombination model, run the code `inf/inference.py`:
+
+`python inference.py`
+
+Of course, you can predict the hidden SNVs with other models, which is a simple extension I have not implemented in the current version. But you can find instructions on how to do this in `inference.py`. 
+
+# Contact
+Zhicong Huang (zhicong.huang@epfl.ch)
