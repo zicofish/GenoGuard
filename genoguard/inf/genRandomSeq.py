@@ -109,6 +109,7 @@ class RecombModel(BaseModel):
         self.mutateMatrix = self.computeMutateMatrix(self.theta, self.N)
         self.alpha = np.zeros((3, self.N, self.N))
         # Bias correction coefficients
+        # From condlike.hpp in "http://stephenslab.uchicago.edu/software.html#hotspotter"
         self.a_ = -3.817e-01 + 6.350e-03 * len(SNPRefList) - 3.833e-05 * len(SNPRefList) * len(SNPRefList);
         self.b_ = -1.133e-01 - 2.600e-03 * len(SNPRefList) + 1.333e-05 * len(SNPRefList) * len(SNPRefList);
         
